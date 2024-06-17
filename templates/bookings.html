@@ -1,0 +1,49 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="container mx-auto mt-8">
+    <h1 class="text-2xl font-bold mb-4">Мои билеты</h1>
+    {% if bookings %}
+    <div class="overflow-x-auto">
+        <table class="table table-zebra w-full">
+            <thead>
+                <tr>
+                    <th>Откуда</th>
+                    <th>Куда</th>
+                    <th>Вылет</th>
+                    <th>Прилет</th>
+                    <th>Кол-во билетов</th>
+                    <th>Действия</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for booking in bookings %}
+                <tr>
+                    <td>{{ booking[0] }}</td>
+                    <td>{{ booking[1] }}</td>
+                    <td>{{ booking[2] }}</td>
+                    <td>{{ booking[3] }}</td>
+                    <td>{{ booking[4] }}</td>
+                    <td>
+                        <form action="{{ url_for('cancel_booking') }}" method="post" style="display:inline;">
+                            <input type="hidden" name="booking_id" value="{{ booking[5] }}">
+                            <button type="submit" class="btn btn-error btn-secondary mx-2">Отменить</button>
+                        </form>
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+        <a href="{{ url_for('index') }}" class="btn btn-secondary mb-4">На главную</a>
+    </div>
+    {% else %}
+    <p>У вас нет забронированных билетов.</p>
+    <a href="{{ url_for('index') }}" class="btn btn-secondary mb-4">На главную</a>
+    {% endif %}
+</div>
+{% endblock %}
+
+
+
+
+

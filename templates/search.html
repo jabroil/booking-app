@@ -1,0 +1,89 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="mt-8">
+    <form>
+        <label class="form-control w-full max-w-xs">
+            <div class="label">
+                <span class="label-text">Откуда</span>
+            </div>
+            <select class="select select-bordered" name="from_airport">
+                <option disabled {% if selected_to_airport == '' %}selected{% endif %}>Выберите аэропорт</option>
+                {% for ap in from_airport %}
+                    <option value="{{ ap[0] }}" {% if ap[0] == selected_from_airport %}selected{% endif %}>{{ ap[1] }}({{ ap[0] }})</option>
+                {% endfor %}
+            </select>
+        </label>
+        <label class="form-control w-full max-w-xs">
+            <div class="label">
+                <span class="label-text">Куда</span>
+            </div>
+            <select class="select select-bordered" name="to_airport">
+                <option disabled {% if selected_to_airport == '' %}selected{% endif %}>Выберите аэропорт</option>
+                {% for ap in to_airport %}
+                    <option value="{{ ap[0] }}" {% if ap[0] == selected_to_airport %}selected{% endif %}>{{ ap[1] }}({{ ap[0] }})</option>
+                {% endfor %}
+            </select>
+        </label>
+        <label class="form-control w-full max-w-xs">
+            <div class="label">
+                <span class="label-text">Когда</span>
+            </div>
+            <input type="date" id="start" name="date" value="{{ date }}"/>
+        </label>
+        <button class="btn btn-primary">Найти</button>
+    </form>
+
+    <div class="mt-4">
+        <a href="{{ url_for('index') }}" class="btn btn-secondary mb-4">На главную</a>
+        
+        {% if selected_from_airport == '' %}
+            <div class="alert error">Выберите откуда лететь</div>
+        {% endif %}
+        {% if selected_to_airport == '' %}
+            <div class="alert error">Выберите куда лететь</div>
+        {% endif %}
+        {% if date == '' %}
+            <div class="alert error">Выберите дату</div>
+        {% endif %}
+        {% if flights == '' %}
+            <div class="alert error">Нет рейсов, измените параметры поиска</div>
+        {% endif %}
+
+        <div class="overflow-x-auto">
+            <table class="table table-zebra">
+                <!-- head -->
+                <thead>
+                    <tr>
+                        <th>Откуда</th>
+                        <th>Куда</th>
+                        <th>Вылет</th>
+                        <th>Прилет</th>
+                        <th>Кол-во билетов</th>
+                        <th></th>
+                    </tr>
+                </thead>
+                <tbody>
+                {% for flight in flights %}
+                    <tr>
+                        <td>{{ flight[1] }}</td>
+                        <td>{{ flight[2] }}</td>
+                        <td>{{ flight[3] }}</td>
+                        <td>{{ flight[4] }}</td>
+                        <td>{{ flight[5] }}</td>
+                        <td class="flex flex-inline flex-row gap-2">
+                            <form action="/book">
+                                <input type="hidden" name="flight_id" value="{{ flight[0] }}"/>
+                                <input type="number" name="tickets_count" placeholder="Кол-во" class="input input-bordered" min="1" max="{{ flight[5] }}">
+                                <button class="btn btn-accent">Забронировать</button>
+                            </form>
+                        </td>
+                    </tr>
+                {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+{% endblock %}
+

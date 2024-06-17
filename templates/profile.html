@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>{% block title %}Home{% endblock %} - FlaskApp</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="https://cdn.jsdelivr.net/npm/daisyui@4.11.1/dist/full.min.css" rel="stylesheet" type="text/css" />
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        body {
+            background-image: url('https://images5.alphacoders.com/479/479484.jpg');
+            background-size: cover;
+            background-position: center;
+            background-repeat: no-repeat;
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            margin: 0;
+            padding: 0;
+            overflow-y: auto;
+        }
+        .content {
+            background-color: rgba(255, 255, 255, 0.9);
+            padding: 2rem;
+            border-radius: 0.5rem;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            margin: 2rem 0;
+            width: 100%;
+            max-width: 600px;
+        }
+    </style>
+</head>
+<body>
+    <div class="content mx-auto max-w-4xl p-4 text-center">
+        <h1 class="text-2xl font-bold mb-4 text-center">Твой профиль: {{ name }}</h1>
+        <div class="flex justify-center mt-4">
+            <a href="/" class="btn btn-primary mx-2">На главную</a>
+            <a href="logout" class="btn btn-error btn-secondary mx-2">Выйти из профиля</a>
+        </div>
+    </div>
+</body>
+</html>
+
