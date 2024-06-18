@@ -84,38 +84,21 @@ def get_all_airports(db):
 
 
 def get_all_flights(db, from_airport, to_airport, date):
-    #cursor = db.execute("SELECT * FROM flights WHERE from_airport = ? and to_airport = ?  and date(departure) = date(?)", (from_airport, to_airport, date))
     cursor = db.execute("""
-    SELECT
-    f.id,
-    f.from_airport,
-    f.to_airport,
-    f.departure,
-    f.arrival,
-    f.available_tickets - COALESCE(SUM(b.tickets_count), 0)
-    AS
-    available_tickets
-FROM
-flights
-f
-LEFT
-JOIN
-booking
-b
-ON
-f.id = b.flight_id
-AND
-b.booking_status = 1
-WHERE
-f.from_airport = ? and f.to_airport = ? and date(f.departure) = date(?)
-GROUP BY f.id, f.from_airport, f.to_airport, f.departure, f.arrival, f.available_tickets
-""", (from_airport, to_airport, date));
+    SELECT f.id, f.from_airport, f.to_airport, f.departure, f.arrival, 
+           f.available_tickets - COALESCE(SUM(b.tickets_count), 0) AS available_tickets
+    FROM flights f
+    LEFT JOIN booking b ON f.id = b.flight_id AND b.booking_status = 1
+    WHERE f.from_airport = ? AND f.to_airport = ? AND date(f.departure) = date(?)
+    GROUP BY f.id, f.from_airport, f.to_airport, f.departure, f.arrival, f.available_tickets
+    """, (from_airport, to_airport, date))
     return cursor.fetchall()
 
 def create_booking(db, flight_id, user_id, tickets_count):
-    print(flight_id, user_id, tickets_count)
-    db.execute("INSERT INTO booking (user_id,flight_id,booking_status,tickets_count) VALUES (?,?,?,?)" , (user_id, flight_id, 1, tickets_count))
-    db.commit()
+    if tickets_count > 0:
+        db.execute("INSERT INTO booking (user_id, flight_id, booking_status, tickets_count) VALUES (?, ?, ?, ?)",
+                   (user_id, flight_id, 1, tickets_count))
+        db.commit()
 
 
 def sign_in(db, username, password):
@@ -217,22 +200,23 @@ def search_view():
 @app.route('/book', methods=['GET'])
 def book_view():
     username = request.cookies.get('username')
-    
     if not username:
-        print('cookie was empty')
         return redirect(url_for('login'))
     
     db = get_db()
     user_id = get_user_id(db, username)
-    
     if not user_id:
-        print('user_id was empty')
         return redirect(url_for('login'))
 
     flight_id = request.args.get('flight_id', '')
     tickets_count = request.args.get('tickets_count', '')
 
     if not flight_id or not tickets_count:
+        return redirect(url_for('search'))
+    
+    try:
+        tickets_count = int(tickets_count)
+    except ValueError:
         return redirect(url_for('search'))
     
     create_booking(db, flight_id, user_id, tickets_count)
@@ -250,7 +234,6 @@ def book_view():
 @app.route('/bookings', methods=['GET'])
 def view_bookings():
     username = request.cookies.get('username')
-    
     if not username:
         return redirect(url_for('login'))
 
@@ -263,7 +246,7 @@ def view_bookings():
     SELECT f.from_airport, f.to_airport, f.departure, f.arrival, b.tickets_count, b.id
     FROM booking b
     JOIN flights f ON b.flight_id = f.id
-    WHERE b.user_id = ? AND b.booking_status = 1
+    WHERE b.user_id = ? AND b.booking_status = 1 AND b.tickets_count > 0
     """, (user_id,))
     bookings = cursor.fetchall()
 
