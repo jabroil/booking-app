@@ -302,8 +302,7 @@ def cancel_booking():
 
     return redirect(url_for('view_bookings'))
 
+migrate_if_not_exists(1);
 
 if __name__ == '__main__':
-    #init_db()
-    migrate_if_not_exists(1);
     app.run(host="0.0.0.0", port=8080, debug=True)
