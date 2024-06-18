@@ -8,7 +8,7 @@
     <script src="https://cdn.tailwindcss.com"></script>
     <style>
         body {
-            background-image: url('https://images5.alphacoders.com/479/479484.jpg');
+            background-image: url({{ url_for('static', filename='images/background.jpg')}});
             background-size: cover;
             background-position: center;
             background-repeat: no-repeat;
@@ -45,6 +45,7 @@
             <a href="/" class="btn btn-primary mx-2">На главную</a>
             <a href="/search" class="btn btn-success">Смотреть билеты</a>
         </div>
+        <div class="main" style="background-image: url({{ url_for('static', filename='images/background.jpg')}})">
     </div>
 </body>
 </html>

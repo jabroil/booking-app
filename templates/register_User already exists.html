@@ -8,7 +8,7 @@
     <script src="https://cdn.tailwindcss.com"></script>
     <style>
         body {
-            background-image: url('https://images5.alphacoders.com/479/479484.jpg');
+            background-image: url({{ url_for('static', filename='images/background.jpg')}});
             background-size: cover;
             background-position: center;
             background-repeat: no-repeat;
@@ -50,6 +50,7 @@
                 <a href="/" class="btn btn-error">Назад</a>
                 <input type="submit" value="Зарегистрироваться" class="btn btn-success">
             </div>
+            <div class="main" style="background-image: url({{ url_for('static', filename='images/background.jpg')}})">
         </form>
     </div>
 </body>
