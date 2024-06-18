@@ -230,9 +230,9 @@ def book_view():
         return redirect(url_for('login'))
 
     flight_id = request.args.get('flight_id', '')
-    tickets_count = request.args.get('tickets_count', 1)
-    
-    if not flight_id:
+    tickets_count = request.args.get('tickets_count', '')
+
+    if not flight_id or not tickets_count:
         return redirect(url_for('search'))
     
     create_booking(db, flight_id, user_id, tickets_count)

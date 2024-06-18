@@ -52,7 +52,6 @@
 
         <div class="overflow-x-auto">
             <table class="table table-zebra">
-                <!-- head -->
                 <thead>
                     <tr>
                         <th>Откуда</th>
@@ -74,7 +73,7 @@
                         <td class="flex flex-inline flex-row gap-2">
                             <form action="/book">
                                 <input type="hidden" name="flight_id" value="{{ flight[0] }}"/>
-                                <input type="number" name="tickets_count" placeholder="Кол-во" class="input input-bordered" min="1" max="{{ flight[5] }}">
+                                <input type="number" name="tickets_count" placeholder="Кол-во" class="input input-bordered" min="1" max="{{ flight[5] }}" required>
                                 <button class="btn btn-accent">Забронировать</button>
                             </form>
                         </td>
@@ -86,4 +85,3 @@
     </div>
 </div>
 {% endblock %}
-
