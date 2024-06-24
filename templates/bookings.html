@@ -34,16 +34,15 @@
                 {% endfor %}
             </tbody>
         </table>
-        <a href="{{ url_for('index') }}" class="btn btn-secondary mb-4">На главную</a>
+        <div class="flex justify-left mt-4">
+            <a href="{{ url_for('index') }}" class="btn btn-secondary mb-4">На главную</a>
+        </div>
     </div>
     {% else %}
     <p>У вас нет забронированных билетов.</p>
-    <a href="{{ url_for('index') }}" class="btn btn-secondary mb-4">На главную</a>
+    <div class="flex justify-left mt-4">
+        <a href="{{ url_for('index') }}" class="btn btn-secondary mb-4">На главную</a>
+    </div>
     {% endif %}
 </div>
 {% endblock %}
-
-фыафы
-
-
-

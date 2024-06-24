@@ -118,7 +118,7 @@
             <p>Это ваш надежный помощник в поиске и бронировании самых выгодных авиабилетов напрямую от авиакомпаний, агентств и онлайн платформ.</p>
             <p>Сравнивайте цены, выбирайте удобные маршруты и экономьте время и деньги с Ticket Finder!</p>
             <div class="button-container">
-                <a href="/search" class="btn-book">Найти билет</a>
+                <a href="{{ url_for('search_view') }}" class="btn-book">Найти билет</a>
                 <a href="{{ url_for('view_bookings') }}" class="btn-book">Мои билеты</a>
             </div>
         </div>

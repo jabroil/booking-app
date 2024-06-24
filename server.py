@@ -76,7 +76,7 @@ def check_if_user_exists(db, username):
 def get_user_id(db, username):
     cursor = db.execute("SELECT id FROM users WHERE username = ?", (username,))
     result = cursor.fetchone()
-    return result[0] if result else None # проверка на None
+    return result[0] if result else None 
 
 def get_all_airports(db):
     cursor = db.execute("SELECT * FROM airports")
@@ -171,7 +171,7 @@ def search_view():
     username = request.cookies.get('username')
     
     if not username:
-        return redirect(url_for('login'))
+        return redirect(url_for('register_view'))
 
     db = get_db()
     ap = get_all_airports(db)
@@ -235,12 +235,12 @@ def book_view():
 def view_bookings():
     username = request.cookies.get('username')
     if not username:
-        return redirect(url_for('login'))
+        return redirect(url_for('register_view'))
 
     db = get_db()
     user_id = get_user_id(db, username)
     if not user_id:
-        return redirect(url_for('login'))
+        return redirect(url_for('register_view'))
 
     cursor = db.execute("""
     SELECT f.from_airport, f.to_airport, f.departure, f.arrival, b.tickets_count, b.id
