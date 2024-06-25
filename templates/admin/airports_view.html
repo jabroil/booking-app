@@ -1,0 +1,37 @@
+{% extends 'admin/base.html' %}
+{% block body %}
+<h1>Airports</h1>
+<table>
+    <thead>
+        <tr>
+            <th>Airport Code</th>
+            <th>Airport Name</th>
+            <th>Action</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for airport in airports %}
+        <tr>
+            <td>{{ airport[0] }}</td>
+            <td>{{ airport[1] }}</td>
+            <td>
+                <a href="{{ url_for('airports.delete_airport', code=airport[0]) }}">Delete</a>
+            </td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+
+<h2>Add Airport</h2>
+<form method="post" action="{{ url_for('.add_airport') }}">
+    <label for="code">Airport code:</label>
+    <input type="text" id="code" name="code"><br>
+
+    <label for="name">Airport name:</label>
+    <input type="text" id="name" name="name"><br>
+    
+    <button type="submit">Add Airport</button>
+</form>
+
+{% endblock %}
+

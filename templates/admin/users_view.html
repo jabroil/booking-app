@@ -1,0 +1,38 @@
+{% extends 'admin/base.html' %}
+{% block body %}
+<h1>Users</h1>
+<table>
+    <thead>
+        <tr>
+            <th>ID</th>
+            <th>Username</th>
+            <th>Password</th>
+            <th>Actions</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for user in users %}
+        <tr>
+            <td>{{ user[0] }}</td>
+            <td>{{ user[1] }}</td>
+            <td>{{ user[2] }}</td>
+            <td>
+                <a href="{{ url_for('.delete_user', user_id=user[0]) }}">Delete</a>
+            </td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+
+<h2>Add User</h2>
+<form method="post" action="{{ url_for('.add_user') }}">
+    <label for="username">Username:</label>
+    <input type="text" id="username" name="username"><br>
+
+    <label for="password">Password:</label>
+    <input type="text" id="password" name="password"><br>
+
+    <button type="submit">Add User</button>
+</form>
+
+{% endblock %}

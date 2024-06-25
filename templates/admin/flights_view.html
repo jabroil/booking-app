@@ -1,0 +1,53 @@
+{% extends 'admin/base.html' %}
+{% block body %}
+<h1>Flights</h1>
+<table>
+    <thead>
+        <tr>
+            <th>ID</th>
+            <th>From Airport</th>
+            <th>To Airport</th>
+            <th>Departure</th>
+            <th>Arrival</th>
+            <th>Available Tickets</th>
+            <th>Actions</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for flight in flights %}
+        <tr>
+            <td>{{ flight[0] }}</td>
+            <td>{{ flight[1] }}</td>
+            <td>{{ flight[2] }}</td>
+            <td>{{ flight[3] }}</td>
+            <td>{{ flight[4] }}</td>
+            <td>{{ flight[5] }}</td>
+            <td>
+                <a href="{{ url_for('flights.delete_flight', flight_id=flight[0]) }}">Delete</a>
+            </td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+
+<h2>Add flight</h2>
+<form method="post" action="{{ url_for('.add_flight') }}">
+    <label for="from_airport">From airport:</label>
+    <input type="text" id="from_airport" name="from_airport"><br>
+
+    <label for="to_airport">To airport:</label>
+    <input type="text" id="to_airport" name="to_airport"><br>
+
+    <label for="departure">Departure:</label>
+    <input type="text" id="departure" name="departure"><br>
+
+    <label for="arrival">Arrival:</label>
+    <input type="text" id="arrival" name="arrival"><br>
+
+    <label for="available_tickets">Available tickets:</label>
+    <input type="text" id="available_tickets" name="available_tickets"><br>
+
+    <button type="submit">Add flight</button>
+</form>
+
+{% endblock %}

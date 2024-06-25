@@ -1,5 +1,6 @@
 from flask import Flask, request, g, render_template, make_response,  abort, redirect, url_for
-
+from flask_admin import Admin, BaseView, expose
+from flask_admin.contrib.sqla import ModelView
 import sqlite3
 import os
 DATABASE = os.path.join(os.getcwd(), 'database.db')
@@ -285,7 +286,116 @@ def cancel_booking():
 
     return redirect(url_for('view_bookings'))
 
+
+class UserModelView(BaseView):
+    @expose('/')
+    def index(self):
+        db = get_db()
+        cursor = db.execute("SELECT * FROM users")
+        users = cursor.fetchall()
+        return self.render('admin/users_view.html', users=users)
+    
+    @expose('/delete/<int:user_id>')
+    def delete_user(self, user_id):
+        db = get_db()
+        db.execute("DELETE FROM users WHERE id = ?", (user_id,))
+        db.commit()
+        return redirect(url_for('.index'))
+
+    @expose('/add', methods=['GET', 'POST'])
+    def add_user(self):
+        if request.method == 'POST':
+            username = request.form['username']
+            password = request.form['password']
+            db = get_db()
+            db.execute("INSERT INTO users (username, password) VALUES (?, ?)", (username, password))
+            db.commit()
+            return redirect(url_for('.index'))
+        return self.render('admin/add_user.html')
+
+
+class FlightModelView(BaseView):
+    @expose('/')
+    def index(self):
+        db = get_db()
+        cursor = db.execute("SELECT * FROM flights")
+        flights = cursor.fetchall()
+        return self.render('admin/flights_view.html', flights=flights)
+    
+    @expose('/delete/<int:flight_id>')
+    def delete_flight(self, flight_id):
+        db = get_db()
+        db.execute("DELETE FROM flights WHERE id = ?", (flight_id,))
+        db.commit()
+        return redirect(url_for('.index'))
+    
+    @expose('/add', methods=['GET', 'POST'])
+    def add_flight(self):
+        if request.method == 'POST':
+            from_airport = request.form['from_airport']
+            to_airport = request.form['to_airport']
+            departure = request.form['departure']
+            arrival = request.form['arrival']
+            available_tickets = request.form['available_tickets']
+            db = get_db()
+            db.execute("INSERT INTO flights (from_airport, to_airport, departure, arrival, available_tickets) VALUES (?, ?, ?, ?, ?)", (from_airport, to_airport, departure, arrival, available_tickets))
+            db.commit()
+            return redirect(url_for('.index'))
+        return self.render('admin/add_flight.html')
+
+
+class BookingModelView(BaseView):
+    @expose('/')
+    def index(self):
+        db = get_db()
+        cursor = db.execute("SELECT * FROM booking")
+        bookings = cursor.fetchall()
+        return self.render('admin/bookings_view.html', bookings=bookings)
+    
+    @expose('/delete/<int:booking_id>')
+    def delete_booking(self, booking_id):
+        db = get_db()
+        db.execute("DELETE FROM booking WHERE id = ?", (booking_id,))
+        db.commit()
+        return redirect(url_for('.index'))
+    
+
+class AirportModelView(BaseView):
+    @expose('/')
+    def index(self):
+        db = get_db()
+        cursor = db.execute("SELECT * FROM airports")
+        airports = cursor.fetchall()
+        return self.render('admin/airports_view.html', airports=airports)
+    
+    @expose('/delete/<code>')
+    def delete_airport(self, code):
+        db = get_db()
+        db.execute("DELETE FROM airports WHERE code = ?", (code,))
+        db.commit()
+        return redirect(url_for('.index'))
+    
+    @expose('/add', methods=['GET', 'POST'])
+    def add_airport(self):
+        if request.method == 'POST':
+            code = request.form['code']
+            name = request.form['name']
+            db = get_db()
+            db.execute("INSERT INTO airports (code, name) VALUES (?, ?)", (code, name))
+            db.commit()
+            return redirect(url_for('.index'))
+        return self.render('admin/add_airport.html')
+
+
+admin = Admin(app, name='Admin Panel', template_mode='bootstrap3')
+admin.add_view(UserModelView(name='Users', endpoint='users'))
+admin.add_view(FlightModelView(name='Flights', endpoint='flights'))
+admin.add_view(BookingModelView(name='Bookings', endpoint='bookings'))
+admin.add_view(AirportModelView(name='Airports', endpoint='airports'))
+
+
 migrate_if_not_exists(1);
+
 
 if __name__ == '__main__':
     app.run(host="0.0.0.0", port=8080, debug=True)
